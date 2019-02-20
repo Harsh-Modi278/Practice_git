@@ -1,0 +1,322 @@
+
+
+// Name:Modi Harsh parag
+// ID:201801029	
+// Last_Modified:18/2/19
+// Program: Implementation of Array List
+// Lab5_Assignment:1
+
+
+#include <iostream>
+using namespace std;
+
+
+template <typename E>
+class List
+{
+    void operator = (const List&) 
+    {
+    	
+    
+    }
+    
+    List(const List&) {}
+    
+    public:
+        //constructors and destructors
+        List() {}
+        virtual ~List() {}
+        
+        //Return the number of elements in the List
+        virtual int NumberOfElements() const = 0;
+        
+        //Return the Location of current element
+        virtual int CurrentLocation() const = 0;
+        
+        //Return the data of current element
+        virtual const E& getData() const = 0;
+        
+        //clear all the data from the List
+        virtual void clear() = 0;
+        
+        //insert a data in the List at current location
+        virtual void insert(const E& data) = 0;
+        
+        //insert a data in the end of the List
+        virtual void append(const E& data) = 0;
+        
+        //delete a data at the current Location
+        virtual E remove() = 0;
+        
+        //set the current Location to the start of the List
+        virtual void setListLocationToStart() = 0;
+        
+        //set the current Location to the end of the List
+        virtual void setListLocationToEnd() = 0;
+        
+        //set the current Location to the element on left side
+        // of current element
+        virtual void previousElement() = 0;
+        
+        //set the current Location to the element on left side
+        // of current element
+        virtual void nextElement() = 0;
+        
+        //Set current Location to a new Location
+        virtual int setToNewLocation(int location) = 0;
+        
+        };
+        
+   
+  template <typename E>
+class arrayList: public List<E>
+{
+    int arraySize; // maximum size of the list
+    int currentSize; // number of data elements stored
+    int currentLocation; // location pointer of the list
+    E* dataArray; // Array for storing the data
+    
+    public:
+        //constructors and destructors
+        arrayList(int size)
+        {
+            arraySize = size;
+            currentSize = currentLocation = 0;
+            dataArray = new E[arraySize+1];
+        }
+        ~arrayList()
+        {
+        	//cout <<endl<<"qwerty"<<endl;
+            delete [] dataArray;    
+        }
+        
+        // I(201801029) started writing from here.
+        
+        int NumberOfElements() const 
+        {
+        	
+        	return currentSize;
+        
+        }
+        
+        int CurrentLocation() const 
+        
+        {
+        	//currentLocation++;//This will be illegal since  method is const type.and currentLocation is a member of the class.
+        	return (currentLocation);
+    
+        }
+        
+        const E& getData() const 
+        {
+        	int loc = CurrentLocation() - currentSize;
+
+
+        	
+        	
+        
+        	return   ( dataArray[ ++loc]  ) ;
+        
+        }
+        
+        void clear()
+        {
+        	  for(int i=1;i<=currentSize;i++)
+			{
+				insert(0);
+		 
+			}
+	
+        
+        }
+        
+        void insert(const E& data) 
+        {
+        
+        	if(currentSize<=arraySize)
+        	{
+
+        		arraySize++;
+        		currentSize++;
+        		int l = CurrentLocation();
+        		
+        		for(int i = currentSize;i>l;i--)
+        		{
+        			//cout <<"i:"<<i<<endl;
+        			dataArray[i+1] = dataArray[i] ;
+        		}
+        	
+        		int loc = currentLocation;
+        		dataArray[ ++loc] = data;	
+        		//currentSize++;
+        		//currentLocation++;
+        	}
+        	
+        	else 
+        		cout <<"Overflow"<<endl;
+        	
+        	
+        }
+        
+        void append(const E& data) 
+        {
+			        	currentSize++;
+			//int a  =CurrentLocation();
+        	*(dataArray+currentSize)= data;
+
+
+        
+        }
+        
+        E remove() 
+        {
+        	E var = getData();
+        	
+        	for(int i=currentLocation;i<=currentSize;i++)
+        	{
+        		 dataArray[i] = dataArray[i+1] ;
+        	}
+        	
+        	
+        	return var; 
+        }
+        
+        void setListLocationToStart() 
+        {
+        	currentLocation=1;///1-based array indexing 
+        }
+        
+        void setListLocationToEnd()
+        {
+        	currentLocation= currentSize  ;///1-based array indexing 
+        
+        }
+        
+       void previousElement() 
+       {
+       		currentLocation--; 
+       
+       } 
+       
+       void nextElement() 
+       {
+       		currentLocation++;
+       }
+       
+       int setToNewLocation(int location) 
+       {
+       		currentLocation = location;
+       
+       }
+       
+       void PrintArray()
+       {
+       		currentLocation =1;
+       		
+       		for(int i=1;i<=currentSize;i++)
+			{
+			
+			cout <<dataArray[i]<<endl;
+		 
+			}
+       }
+        
+        
+}; 
+
+
+
+
+
+
+int main()
+{
+	  
+
+	int n;
+	
+
+	int x;
+	
+	cout << "Input size of your array:" ;
+	cin >> n;
+
+
+	arrayList<int> arr(n);//arr is object of arrayList class.
+	
+	cout <<" -----------------Now ,input your array elements :-----------------"<<endl;
+	
+	for(int i=1;i<=n;i++)
+	{
+
+		cout <<"Input "<<i<<"th element:";
+		cin >>x;
+		arr.insert(x);
+		arr.nextElement() ;
+		 
+	}
+	
+	//cout <<arr.NumberOfElements()<<endl;
+	
+	//For 
+	
+	cout << "---------------printing the aray------------"<<endl;
+	
+	for(int i=1;i<=n+1;i++)
+	{
+		x = arr.getData();
+		arr.nextElement() ;
+		cout <<x<<endl;
+		 
+	}
+	
+	int key;
+	
+	cout <<"Insert....."<<endl;
+
+	cout <<"1 to insert a new element in the array."<<endl;
+	cout <<"2 to insert a data in the end of the List"<<endl;
+	cout <<"3 to know the currentLocation"<<endl;
+	cout <<"4 to know the data int the list at the current location"<<endl;
+	cout <<"5 to delete a data  at the current location"<<endl;
+	cout <<"6 to set the current Location to the start of the List"<<endl;
+	cout <<"7 to set the current Location to the end of the List"<<endl;
+	cout <<"8 to clear all the data from the list"<<endl;
+	cout <<"0 to exit"<<endl;	
+
+
+cin>>key;
+
+while(key!=0)
+{
+	if(key==2)
+	{
+		int var;
+		cout <<"Input data to be appended at the last of the array:"<<endl;
+		cin>>var;
+		arr.append(var);
+		
+
+		
+		cout << "---------------printing the aray------------"<<endl;
+		
+		arr.PrintArray();
+						
+		 
+		
+	}
+	
+	if(key==1)
+	{
+		cout <<""<<endl;
+	}
+	
+	cout <<"Input key again:"<<endl;
+	cin>>key;
+}
+						
+
+
+
+return 0;
+}
